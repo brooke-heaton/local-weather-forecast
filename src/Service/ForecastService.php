@@ -63,6 +63,7 @@ class ForecastService {
       $element = [
         '#theme' => 'local_weather_forecast',
         '#city' => $forecast->city->name,
+        '#timezone' => $forecast->city->timezone,
         '#forecast' => $hourly_forecast,
       ];
       $element['#cache']['max-age'] = 0;

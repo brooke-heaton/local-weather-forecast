@@ -32,6 +32,7 @@ function local_weather_forecast_theme() {
       'variables' => [
         'city' => NULL,
         'forecast' => NULL,
+        'timezone' => NULL,
         'increments' => 40,
       ],
       'template' => 'local-weather-forecast',

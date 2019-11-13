@@ -1,4 +1,5 @@
 <h2>Forecast for {{ city }}</h2>
+<div class="timezone-note">Note: Forecasts are given in the local timezone of the city.</div>
 <div class="'local-forecast">
     <table>
       <tr>
@@ -7,7 +8,7 @@
         {%  for day in forecast %}
       </tr>
       <tr>
-        <td>{{ day.dt | date("D, F d, ga","America/Denver") }}</td>
+        <td>{{ day.dt | date("D, F d, ga", timezone) }}</td>
         <td>{{ day.weather.0.description | capitalize }} <img src="http://openweathermap.org/img/wn/{{ day.weather.0.icon }}@2x.png" alt="" width="20"></td>
       </tr>
       {% endfor %}
