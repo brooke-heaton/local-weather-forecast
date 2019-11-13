@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+name: City
+vid: city
+description: 'U.S. city'
+weight: 0

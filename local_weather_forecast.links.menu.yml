@@ -1,0 +1,6 @@
+local_weather_forecast.settings:
+  title: 'Local Forecast Configuration'
+  description: 'Configuration settings for local weather forecasts'
+  route_name: local_weather_forecast.settings
+  weight: 10
+  parent: system.admin_config_system

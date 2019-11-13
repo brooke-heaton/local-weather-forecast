@@ -1,0 +1,7 @@
+local_weather_forecast.settings:
+  path: '/admin/config/system/forecast'
+  defaults:
+    _form: '\Drupal\local_weather_forecast\Form\SettingsForm'
+    _title: 'Local Weather Forecast'
+  requirements:
+    _permission: 'administer site configuration'

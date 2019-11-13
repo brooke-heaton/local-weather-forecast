@@ -1,0 +1,89 @@
+<?php
+
+use Drupal\taxonomy\Entity\Term;
+use \Drupal\node\Entity\Node;
+
+function local_weather_forecast_install() {
+  // Install some example cities so that we can demo functionality.
+  $vocab = 'city';
+  if($city_vocab = \Drupal\taxonomy\Entity\Vocabulary::load($vocab)) {
+    $module_handler = \Drupal::service('module_handler');
+    $module_path = $module_handler->getModule('local_weather_forecast')->getPath();
+    // Cities are stored in the city_data directory of this module
+    $csv_uri = $module_path . '/city_data/cities.csv';
+    // Open the file for reading
+    if (($h = fopen("{$csv_uri}", "r")) !== FALSE)
+    {
+      // Each line in the file is converted into an individual array that we call $data
+      while (($data = fgetcsv($h, 1000, ",")) !== FALSE)
+      {
+        $cities[] = $data[0];
+      }
+      fclose($h);
+    }
+    // Programatically create taxonomy terms in the city vocabulary.
+    foreach ($cities as $city) {
+      $term = Term::create(array(
+        'parent' => array(),
+        'name' => $city,
+        'vid' => $vocab,
+        'uid' => 1,
+      ))->save();
+    }
+  }
+
+  // Find the tid of the 'Des Moines' term created above
+  $term = \Drupal::entityQuery('taxonomy_term')
+    ->condition('name', 'Des Moines')
+    ->execute();
+  if(!empty($term)) {
+    $tid = reset($term);
+    // Create an example node for Des Moines
+    $node = Node::create([
+      'type' => 'city_profile',
+      'title' => 'Des Moines',
+      'field_city' => [
+        'target_id' => $tid,
+      ],
+    ]);
+    $node->save();
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function local_weather_forecast_uninstall() {
+  // Load all city term entities
+  $tids = \Drupal::entityQuery('taxonomy_term')
+    ->condition('vid', 'city')
+    ->execute();
+  // Delete city term entities.
+  if (!empty($tids)) {
+    $termStorage  = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+    $entities = $termStorage->loadMultiple($tids);
+    $termStorage->delete($entities);
+  }
+  // Load all city profile node entities
+  $nids = \Drupal::entityQuery('node')
+    ->condition('type', 'city_profile')
+    ->execute();
+  // Delete city profile entities.
+  if (!empty($nids)) {
+    $nodeStorage  = \Drupal::entityTypeManager()->getStorage('node');
+    $entities = $nodeStorage->loadMultiple($nids);
+    $nodeStorage->delete($entities);
+  }
+  $config_factory = Drupal::configFactory();
+  // Delete city profile fields
+  $config_factory->getEditable('core.base_field_override.node.city_profile.title')->delete();
+  $config_factory->getEditable('core.entity_form_display.node.city_profile.default')->delete();
+  $config_factory->getEditable('core.entity_view_display.node.city_profile.default')->delete();
+  $config_factory->getEditable('core.entity_view_display.node.city_profile.teaser')->delete();
+  $config_factory->getEditable('field.field.node.city_profile.body')->delete();
+  $config_factory->getEditable('field.field.node.city_profile.field_city')->delete();
+  $config_factory->getEditable('field.storage.node.field_city')->delete();
+  $config_factory->getEditable('local_weather_forecast')->delete();
+  $config_factory->getEditable('node.type.city_profile')->delete();
+  $config_factory->getEditable('taxonomy.vocabulary.city')->delete();
+}

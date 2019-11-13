@@ -1,0 +1,17 @@
+<h2>Forecast for {{ city }}</h2>
+<div class="'local-forecast">
+    <table>
+      <tr>
+        <td><strong>Date</strong></td>
+        <td><strong>Forecast</strong></td>
+        {%  for day in forecast %}
+      </tr>
+      <tr>
+        <td>{{ day.dt | date("D, F d, ga","America/Denver") }}</td>
+        <td>{{ day.weather.0.description | capitalize }} <img src="http://openweathermap.org/img/wn/{{ day.weather.0.icon }}@2x.png" alt="" width="20"></td>
+      </tr>
+      {% endfor %}
+    </table>
+    </li>
+  </ul>
+</div>

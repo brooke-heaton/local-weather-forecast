@@ -1,0 +1,36 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.city_profile.body
+    - field.field.node.city_profile.field_city
+    - node.type.city_profile
+  module:
+    - local_weather_forecast
+    - text
+    - user
+id: node.city_profile.default
+targetEntityType: node
+bundle: city_profile
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 101
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_city:
+    weight: 103
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: forecast_field_formatter
+    region: content
+  links:
+    weight: 100
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }
