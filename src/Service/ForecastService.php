@@ -59,11 +59,12 @@ class ForecastService {
         $forecast = json_decode($request->getBody());
       }
       $hourly_forecast = $forecast->list;
+     $timezone = timezone_name_from_abbr('', $forecast->city->timezone, 0);
       // use our theme function to render twig template
       $element = [
         '#theme' => 'local_weather_forecast',
         '#city' => $forecast->city->name,
-        '#timezone' => $forecast->city->timezone,
+        '#timezone' => $timezone,
         '#forecast' => $hourly_forecast,
       ];
       $element['#cache']['max-age'] = 0;
